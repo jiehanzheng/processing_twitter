@@ -12,12 +12,17 @@ class RollingStringArrayList {
     while (numToBeDeleted > 0) {
       numToBeDeleted--;
       al.remove(0);
+      println("Removed 1 from cache");
     }
 
     al.add(s);
+    println("New cached: " + s);
   }
 
   synchronized String pop() {
-    return al.remove(al.size()-1);
+    if (al.size() > 0)
+      return al.remove(al.size()-1);
+    else
+      return "Requesting too fast...";
   }
 }

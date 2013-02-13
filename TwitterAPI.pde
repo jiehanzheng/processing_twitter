@@ -141,7 +141,6 @@ class TwitterAPI {
     JSONObject jsonResult = new JSONObject(twitterResult);
     JSONArray returnedStatuses = jsonResult.getJSONArray("statuses");
     for (int i = returnedStatuses.length()-1; i >= 0; i--) {
-      println(returnedStatuses.getJSONObject(i).getString("text"));
       cachedTweets.add(returnedStatuses.getJSONObject(i).getString("text"));
     }
   }
