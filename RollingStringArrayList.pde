@@ -1,4 +1,10 @@
 class RollingStringArrayList {
+
+  /**
+   * Debug Flag
+   */
+  private final boolean verbose = false;
+
   ArrayList<String> al;
   int size;
 
@@ -12,11 +18,11 @@ class RollingStringArrayList {
     while (numToBeDeleted > 0) {
       numToBeDeleted--;
       al.remove(0);
-      println("Removed 1 from cache");
+      if (verbose) println("Removed 1 from cache");
     }
 
     al.add(s);
-    println("New cached: " + s);
+    if (verbose) println("New cached: " + s);
   }
 
   synchronized String pop() {
@@ -24,5 +30,9 @@ class RollingStringArrayList {
       return al.remove(al.size()-1);
     else
       return "Requesting too fast...";
+  }
+
+  public int size() {
+    return al.size();
   }
 }

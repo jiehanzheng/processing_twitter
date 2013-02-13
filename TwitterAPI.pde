@@ -23,11 +23,23 @@ import java.util.regex.*;
 class TwitterAPI {
 
   /**
+   * Debug Flag
+   */
+  private final boolean verbose = false;
+
+  /**
    * Cache Size
    *
    * Always try to keep X tweets.
    */
   private int cacheSize = 100;
+
+  /**
+   * Return Threshold
+   *
+   * Block execution until threshold is reached.
+   */
+  private int blockUntil = 20;
 
   /**
    * Cached Tweets
@@ -55,16 +67,17 @@ class TwitterAPI {
 
   TwitterAPI() {
     cachedTweets = new RollingStringArrayList(cacheSize);
+    streamInit();
 
-    ArrayList<String> trackList = new ArrayList<String>();
-    trackList.add(track);
-
-    streamInit(trackList);
+    // dont return until we have some tweets
+    while (cachedTweets.size() <= blockUntil) {
+      try{Thread.sleep(100);}catch(Exception e){}
+    }
   }
 
   private void streamInit() {
     ConfigurationBuilder cb = new ConfigurationBuilder();
-    cb.setDebugEnabled(true)
+    cb.setDebugEnabled(false)
       .setOAuthConsumerKey(CONSUMER_KEY)
       .setOAuthConsumerSecret(CONSUMER_SECRET)
       .setOAuthAccessToken(ACCESS_TOKEN)
