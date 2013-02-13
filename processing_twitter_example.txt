@@ -1,7 +1,7 @@
 TwitterAPI t;
 
 void setup() {
-  t = new TwitterAPI("ENTER YOUR consumerKey HERE"
+  t = new TwitterAPI("ENTER YOUR consumerKey HERE",
                      "ENTER YOUR consumerSecret HERE",
                      "ENTER YOUR accessToken HERE",
                      "ENTER YOUR accessTokenSecret HERE");
