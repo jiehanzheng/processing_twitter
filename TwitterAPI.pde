@@ -18,6 +18,8 @@
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.net.URLEncoder;
+import java.io.UnsupportedEncodingException;
+import java.util.regex.*;
 
 
 class TwitterAPI {
