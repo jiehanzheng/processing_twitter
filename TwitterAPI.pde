@@ -17,8 +17,6 @@
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.net.URLEncoder;
-import java.io.UnsupportedEncodingException;
 import java.util.regex.*;
 
 
@@ -56,22 +54,15 @@ class TwitterAPI {
   private final String ACCESS_TOKEN_SECRET = "nEvceYVOhk1AN8Zj8HrVB2mp1XUcx8kJjUoJGHNob8";
 
   TwitterAPI() {
-    this("mad at");
-  }
-
-  TwitterAPI(String track) {
     cachedTweets = new RollingStringArrayList(cacheSize);
 
     ArrayList<String> trackList = new ArrayList<String>();
     trackList.add(track);
 
-    try {
-      prefillCache(track, cacheSize);
-    } catch (Exception e) {}
     streamInit(trackList);
   }
 
-  private void streamInit(ArrayList<String> track) {
+  private void streamInit() {
     ConfigurationBuilder cb = new ConfigurationBuilder();
     cb.setDebugEnabled(true)
       .setOAuthConsumerKey(CONSUMER_KEY)
@@ -105,46 +96,9 @@ class TwitterAPI {
     };
 
     twitterStream.addListener(listener);
-    String[] trackArray = track.toArray(new String[track.size()]);
 
     // filter() method internally creates a thread which manipulates TwitterStream and calls these adequate listener methods continuously.
-    FilterQuery fq = new FilterQuery();
-    fq.track(trackArray);
-
-    twitterStream.filter(fq);
-  }
-
-  private void prefillCache(String q, int count) throws JSONException,
-                                                        UnsupportedEncodingException {
-    String requestUrl = "http://api.twitter.com/1.1/search/tweets.json" +
-                        "?q=" + URLEncoder.encode(q, "UTF-8") +
-                        "&count=" + count +
-                        "&include_entities=false" +
-                        "&result_type=recent" +
-                        "&lang=en";
-
-    println(requestUrl);
-
-    OAuthRequest request = new OAuthRequest(Verb.GET, requestUrl);
-    OAuthService service = new ServiceBuilder()
-      .provider(TwitterApi.class)
-      .apiKey(CONSUMER_KEY)
-      .apiSecret(CONSUMER_SECRET)
-      .build();
-    service.signRequest(new Token(ACCESS_TOKEN, ACCESS_TOKEN_SECRET), request);
-    Response response = request.send();
-
-    String twitterResult = "{\"statuses\":[],\"search_metadata\":{\"max_id\": -1,\"since_id\": -1}}";
-    if (response.getCode() == 200) {
-      if (null == match(response.getBody(), "<title>Web Site Blocked!</title>"))
-        twitterResult = response.getBody();
-    }
-
-    JSONObject jsonResult = new JSONObject(twitterResult);
-    JSONArray returnedStatuses = jsonResult.getJSONArray("statuses");
-    for (int i = returnedStatuses.length()-1; i >= 0; i--) {
-      cachedTweets.add(returnedStatuses.getJSONObject(i).getString("text"));
-    }
+    twitterStream.sample();
   }
 
   String getTweet() {
