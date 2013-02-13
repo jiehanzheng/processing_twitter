@@ -1,0 +1,16 @@
+TwitterAPI t;
+
+void setup() {
+  t = new TwitterAPI("ENTER YOUR consumerKey HERE"
+                     "ENTER YOUR consumerSecret HERE",
+                     "ENTER YOUR accessToken HERE",
+                     "ENTER YOUR accessTokenSecret HERE");
+
+  // the line above will not return until we receive 20 tweets
+
+  println(" > " + t.getTweet());
+  println(" > " + t.getTweet());
+  println(" > " + t.getTweet());
+  println(" > " + t.getTweet());
+  println(" > " + t.getTweet());
+}

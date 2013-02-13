@@ -48,7 +48,7 @@ class TwitterAPI {
    * out from <code>cachedTweets</code>.  When we runs out of cached tweets, 
    * <code>getTweet()</code> will fetch more from Twitter API and store them.
    */
-  private RollingStringArrayList cachedTweets;
+  private RollingStringArrayList cachedTweets = new RollingStringArrayList(cacheSize);
 
   /**
    * Twitter stuff
@@ -60,13 +60,20 @@ class TwitterAPI {
    * Do not abuse my keys...  anyone using this combination shares the 
    * 180reqs/15mins quota, or the 1-stream-at-all-times limit.
    */
-  private final String CONSUMER_KEY = "BMJAwlAKgDEw1MrgZqfHqQ";
-  private final String CONSUMER_SECRET = "GM59Nr4c296Tqog74lNGBzai1za5CgrvlwRc3nnY2Cg";
-  private final String ACCESS_TOKEN = "34873459-B3GQy8y6d3iRN5UV24ys3ErL62j5tAFFCdjhe2Waf";
-  private final String ACCESS_TOKEN_SECRET = "nEvceYVOhk1AN8Zj8HrVB2mp1XUcx8kJjUoJGHNob8";
+  private String consumerKey;
+  private String consumerSecret;
+  private String accessToken;
+  private String accessTokenSecret;
 
-  TwitterAPI() {
-    cachedTweets = new RollingStringArrayList(cacheSize);
+  TwitterAPI(String consumerKey, 
+             String consumerSecret, 
+             String accessToken, 
+             String accessTokenSecret) {
+    this.consumerKey = consumerKey;
+    this.consumerSecret = consumerSecret;
+    this.accessToken = accessToken;
+    this.accessTokenSecret = accessTokenSecret;
+
     streamInit();
 
     // dont return until we have some tweets
@@ -78,10 +85,10 @@ class TwitterAPI {
   private void streamInit() {
     ConfigurationBuilder cb = new ConfigurationBuilder();
     cb.setDebugEnabled(false)
-      .setOAuthConsumerKey(CONSUMER_KEY)
-      .setOAuthConsumerSecret(CONSUMER_SECRET)
-      .setOAuthAccessToken(ACCESS_TOKEN)
-      .setOAuthAccessTokenSecret(ACCESS_TOKEN_SECRET);
+      .setOAuthConsumerKey(consumerKey)
+      .setOAuthConsumerSecret(consumerSecret)
+      .setOAuthAccessToken(accessToken)
+      .setOAuthAccessTokenSecret(accessTokenSecret);
 
     TwitterStream twitterStream = new TwitterStreamFactory(cb.build()).getInstance();
 
