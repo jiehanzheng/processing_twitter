@@ -100,7 +100,7 @@ class TwitterAPI {
       // omg do i really have to implement these...
       public void onDeletionNotice(StatusDeletionNotice statusDeletionNotice) {}
       public void onScrubGeo(long userId, long upToStatusId) {}
-  };
+    };
 
     twitterStream.addListener(listener);
     String[] trackArray = track.toArray(new String[track.size()]);
@@ -113,7 +113,7 @@ class TwitterAPI {
   }
 
   private void prefillCache(String q, int count) throws JSONException,
-                                                UnsupportedEncodingException {
+                                                        UnsupportedEncodingException {
     String requestUrl = "http://api.twitter.com/1.1/search/tweets.json" +
                         "?q=" + URLEncoder.encode(q, "UTF-8") +
                         "&count=" + count +
